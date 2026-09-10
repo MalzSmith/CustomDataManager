@@ -1,0 +1,23 @@
+<UserControl x:Class="CustomDataManager.UI.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CustomDataManager.UI"
+             xmlns:customDataManager="clr-namespace:CustomDataManager"
+             d:DataContext="{d:DesignInstance customDataManager:MainViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="500">
+    <StackPanel Margin="8">
+
+        <local:SettingsView DataContext="{Binding Settings}" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,12">
+            <Button Content="Export" Command="{Binding ExportCommand}"
+                    MinWidth="90" Padding="8,3" Margin="0,0,8,0" />
+            <Button Content="Import" Command="{Binding ImportCommand}"
+                    MinWidth="90" Padding="8,3" />
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

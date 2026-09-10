@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>Custom Data Manager</Name>
+	<Guid>51e2008e-4c8b-4972-9943-4c9248936c70</Guid>
+	<Repository>Custom Data Manager</Repository>
+	<Version>v0.0.1</Version>
+</PluginManifest>

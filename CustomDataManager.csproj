@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <LangVersion>14</LangVersion>
+        <PlatformTarget>x64</PlatformTarget>
+        <Prefer32Bit>false</Prefer32Bit>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <DefaultItemExcludes>$(DefaultItemExcludes);TorchBinaries\**;Build\**</DefaultItemExcludes>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TorchBinariesDirectory>$(MSBuildProjectDirectory)\TorchBinaries\</TorchBinariesDirectory>
+        <GameBinariesDirectory>$(TorchBinariesDirectory)DedicatedServer64\</GameBinariesDirectory>
+        <PluginPackageName>CustomDataManager</PluginPackageName>
+        <PluginPackageDirectory>$(MSBuildProjectDirectory)\Build\</PluginPackageDirectory>
+        <PluginPackagePath>$(PluginPackageDirectory)$(PluginPackageName).zip</PluginPackagePath>
+        <PluginPackageStagingDirectory>$(MSBuildProjectDirectory)\obj\$(Configuration)\$(TargetFramework)\package\</PluginPackageStagingDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="manifest.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="NLog">
+            <HintPath>$(TorchBinariesDirectory)NLog.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Torch">
+            <HintPath>$(TorchBinariesDirectory)Torch.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Torch.API">
+            <HintPath>$(TorchBinariesDirectory)Torch.API.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Sandbox.Common">
+            <HintPath>$(GameBinariesDirectory)Sandbox.Common.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Sandbox.Game">
+            <HintPath>$(GameBinariesDirectory)Sandbox.Game.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="VRage">
+            <HintPath>$(GameBinariesDirectory)VRage.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="VRage.Game">
+            <HintPath>$(GameBinariesDirectory)VRage.Game.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="VRage.Library">
+            <HintPath>$(GameBinariesDirectory)VRage.Library.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="VRage.Math">
+            <HintPath>$(GameBinariesDirectory)VRage.Math.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <Target Name="PackagePlugin" AfterTargets="Build" Condition="'$(TargetPath)' != ''">
+        <ItemGroup>
+            <PluginPackageFiles Include="$(TargetPath)" />
+            <PluginPackageFiles Include="$(TargetDir)manifest.xml" />
+            <PluginPackageFiles Include="@(PluginPackageExtraFiles)" />
+        </ItemGroup>
+
+        <RemoveDir Directories="$(PluginPackageStagingDirectory)" />
+        <MakeDir Directories="$(PluginPackageStagingDirectory);$(PluginPackageDirectory)" />
+
+        <Copy SourceFiles="@(PluginPackageFiles)"
+              DestinationFolder="$(PluginPackageStagingDirectory)"
+              SkipUnchangedFiles="false" />
+
+        <ZipDirectory SourceDirectory="$(PluginPackageStagingDirectory)"
+                      DestinationFile="$(PluginPackagePath)"
+                      Overwrite="true" />
+
+        <Message Importance="high" Text="Packaged plugin -> $(PluginPackagePath)" />
+    </Target>
+
+</Project>
